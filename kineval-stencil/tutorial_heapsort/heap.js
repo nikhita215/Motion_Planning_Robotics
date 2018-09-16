@@ -52,8 +52,6 @@ if(h%2==0)
 
 minheaper.insert = minheap_insert;
 
-
-
 function minheap_extract(heap) {
 
 smallest= heap[0];
