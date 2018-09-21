@@ -181,6 +181,7 @@ function animate() {
             search_result = iterateGraphSearch();
                 break;
             case "breadth-first": 
+            search_result = breadthsearch();
             case "greedy-best-first": 
             case "A-star": 
             case "RRT": 
@@ -255,7 +256,7 @@ else if(current_node != goal){
     draw_2D_configuration(q);
 
     if(testCollision( [ G[i_o-1][j_o].x, G[i_o-1][j_o].y ] )){;}  
-    else if(G[i_o-1][j_o].visited == false){
+    else if(G[i_o - 1][j_o].visited == false){
         visit_queue.push(G[i_o-1][j_o]);
         west= true;}
 
@@ -265,7 +266,7 @@ else if(current_node != goal){
         east= true;}
 
     if(testCollision( [ G[i_o][j_o-1].x, G[i_o][j_o-1].y ] )){;}     
-    else if(G[i_o][j_o-1].visited == false){
+    else if(G[i_o][j_o - 1].visited == false){
         visit_queue.push(G[i_o][j_o-1]);
         north= true;}
      
@@ -324,6 +325,78 @@ else if(current_node == goal){
     //   drawHighlightedPathGraph - draws a path back to the start location
     //   draw_2D_configuration - draws a square at a given location 
 }
+
+function breadthsearch() {
+q=[];
+
+    current_node = visit_queue.shift();
+    i_o=current_node.i;
+    j_o=current_node.j;
+
+
+G[i_o][j_o].visited = true;
+q= [ G[i_o][j_o].x, G[i_o][j_o].y ] ;
+draw_2D_configuration(q);
+search_visited++ ;
+
+
+if(testCollision(q)){ 
+    search_iterate = false;
+    return "failed";
+   
+}
+else if(current_node != goal){
+    path_length++;
+    draw_2D_configuration(q);
+
+    if(testCollision( [ G[i_o-1][j_o].x, G[i_o-1][j_o].y ] )){;}  
+    else if(G[i_o-1][j_o].queued == false){
+        visit_queue.push(G[i_o-1][j_o]);
+        G[i_o-1][j_o].parent = G[i_o][j_o];
+        G[i_o-1][j_o].queued = true;
+        G[i_o-1][j_o].distance = G[i_o][j_o].distance + eps;}
+
+    if(testCollision( [ G[i_o+1][j_o].x, G[i_o+1][j_o].y ] )){;}      
+    else if(G[i_o+1][j_o].queued == false){
+        visit_queue.push(G[i_o+1][j_o]);
+        G[i_o+1][j_o].parent = G[i_o][j_o];
+        G[i_o+1][j_o].queued = true;
+        G[i_o+1][j_o].distance = G[i_o][j_o].distance + eps;}
+
+    if(testCollision( [ G[i_o][j_o-1].x, G[i_o][j_o-1].y ] )){;}     
+    else if(G[i_o][j_o-1].queued == false){
+        visit_queue.push(G[i_o][j_o-1]);
+        G[i_o][j_o-1].queued = true;
+        G[i_o][j_o-1].parent = G[i_o][j_o];
+        G[i_o][j_o-1].distance = G[i_o][j_o].distance + eps;}
+     
+    if(testCollision( [ G[i_o][j_o+1].x, G[i_o][j_o+1].y ] )){;}    
+    else if(G[i_o][j_o+1].queued == false){
+        visit_queue.push(G[i_o][j_o+1]);
+        G[i_o][j_o+1].queued = true;
+        G[i_o][j_o+1].parent = G[i_o][j_o];
+        G[i_o][j_o+1].distance = G[i_o][j_o].distance + eps;}
+    
+
+
+   
+
+    // console.log(G[i_o][j_o].parent.x);
+     //console.log(current_node);
+   //  console.log(visit_queue[visit_queue.length - 1]);
+       
+return "iterating";
+
+} 
+else if(current_node == goal){
+    drawHighlightedPathGraph(current_node);
+    search_iterate = false;
+    console.log("yay");
+    return "succeeded";
+} 
+else {return "didn't find goal" ;}
+}
+
 function iterateRRT() {
     // STENCIL: implement a single iteration of an RRT algorithm.
     //   An asynch timing mechanism is used instead of a for loop to avoid 
@@ -439,7 +512,6 @@ function initSearchGraph() {
                 queued:false // flag for whether the node has been queued for visiting
             };
 
-            
             // STENCIL: determine whether this graph node should be the start
             //   point for the search
 
@@ -451,6 +523,7 @@ function initSearchGraph() {
             j_o= G[iind][jind].j;
             G[i_o][j_o].parent= G[i_o][j_o];
             G[i_o][j_o].distance= 0;
+            
         }
         }
         if( Math.abs(G[iind][jind].x - q_goal[0]) <= eps ){
@@ -461,10 +534,16 @@ function initSearchGraph() {
             j_f= G[iind][jind].j;
         }
         } 
-            //visit_queue = []; 
+          G[iind][jind].queued = false;
         }
     }
-console.log(i_o);
+            //G[i_o-1][j_o].queued= false;
+           // G[i_o+1][j_o].queued= false;
+            //G[i_o][j_o-1].queued= false;
+            //G[i_o][j_o+1].queued= false;
+           
+           G[i_o][j_o].queued= true;
+//console.log(G[i_o-1][j_o-1].queued);
 }
 function setPlanningScene() {
     // obstacles specified as a range along [0] (x-dimension) and [1] y-dimension
