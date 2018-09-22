@@ -181,9 +181,14 @@ function animate() {
             search_result = iterateGraphSearch();
                 break;
             case "breadth-first": 
-            search_result = breadthsearch();
+            search_result = BreadthSearch();
+            break;
             case "greedy-best-first": 
+            search_result = GreedySearch(); 
+            break;
             case "A-star": 
+            search_result = AStarSearch(); 
+            break;
             case "RRT": 
                 search_result = "failed";
                 // (hack to speed viz) 
@@ -291,7 +296,7 @@ else if(current_node != goal){
    
 
     // console.log(G[i_o][j_o].parent.x);
-     console.log(current_node);
+    // console.log(current_node);
    //  console.log(visit_queue[visit_queue.length - 1]);
        
 return "iterating";
@@ -326,13 +331,13 @@ else if(current_node == goal){
     //   draw_2D_configuration - draws a square at a given location 
 }
 
-function breadthsearch() {
+function BreadthSearch() {
 q=[];
 
     current_node = visit_queue.shift();
     i_o=current_node.i;
     j_o=current_node.j;
-
+//console.log(visit_queue.length);
 
 G[i_o][j_o].visited = true;
 q= [ G[i_o][j_o].x, G[i_o][j_o].y ] ;
@@ -376,14 +381,7 @@ else if(current_node != goal){
         G[i_o][j_o+1].queued = true;
         G[i_o][j_o+1].parent = G[i_o][j_o];
         G[i_o][j_o+1].distance = G[i_o][j_o].distance + eps;}
-    
-
-
    
-
-    // console.log(G[i_o][j_o].parent.x);
-     //console.log(current_node);
-   //  console.log(visit_queue[visit_queue.length - 1]);
        
 return "iterating";
 
@@ -396,6 +394,240 @@ else if(current_node == goal){
 } 
 else {return "didn't find goal" ;}
 }
+
+
+
+
+function GreedySearch(){
+    q=[];
+
+    current_node = visit_queue.shift();
+    i_o=current_node.i;
+    j_o=current_node.j;
+
+G[i_o][j_o].visited = true;
+q= [ G[i_o][j_o].x, G[i_o][j_o].y ] ;
+draw_2D_configuration(q);
+search_visited++ ;
+
+
+if(testCollision(q)){ 
+    search_iterate = false;
+    return "failed";
+   
+}
+else if(current_node != goal){
+    path_length++;
+    draw_2D_configuration(q);
+
+    if(testCollision( [ G[i_o-1][j_o].x, G[i_o-1][j_o].y ] )){;}  
+    else if(G[i_o-1][j_o].queued == false){
+        visit_queue.push(G[i_o-1][j_o]);
+        G[i_o-1][j_o].parent = G[i_o][j_o];
+        G[i_o-1][j_o].queued = true;
+        G[i_o-1][j_o].distance = G[i_o][j_o].distance + eps;
+        G[i_o-1][j_o].fscore = Math.sqrt(Math.pow(i_o-1 - i_f, 2) + Math.pow(j_o - j_f, 2));}
+
+    if(testCollision( [ G[i_o+1][j_o].x, G[i_o+1][j_o].y ] )){;}      
+    else if(G[i_o+1][j_o].queued == false){
+        visit_queue.push(G[i_o+1][j_o]);
+        G[i_o+1][j_o].parent = G[i_o][j_o];
+        G[i_o+1][j_o].queued = true;
+        G[i_o+1][j_o].distance = G[i_o][j_o].distance + eps;
+        G[i_o+1][j_o].fscore = Math.sqrt(Math.pow(i_o+1 - i_f, 2) + Math.pow(j_o - j_f, 2));}
+
+    if(testCollision( [ G[i_o][j_o-1].x, G[i_o][j_o-1].y ] )){;}     
+    else if(G[i_o][j_o-1].queued == false){
+        visit_queue.push(G[i_o][j_o-1]);
+        G[i_o][j_o-1].queued = true;
+        G[i_o][j_o-1].parent = G[i_o][j_o];
+        G[i_o][j_o-1].distance = G[i_o][j_o].distance + eps;
+        G[i_o][j_o-1].fscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o-1- j_f, 2));}
+     
+    if(testCollision( [ G[i_o][j_o+1].x, G[i_o][j_o+1].y ] )){;}    
+    else if(G[i_o][j_o+1].queued == false){
+        visit_queue.push(G[i_o][j_o+1]);
+        G[i_o][j_o+1].queued = true;
+        G[i_o][j_o+1].parent = G[i_o][j_o];
+        G[i_o][j_o+1].distance = G[i_o][j_o].distance + eps;
+        G[i_o][j_o+1].fscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o +1- j_f, 2));} 
+
+       heap = [];
+   for (i=0;i<visit_queue.length;i++) {
+  minheap_insert(heap, visit_queue[i]);  }
+
+visit_queue = [];
+hl=heap.length;
+for (i=0;i<hl;i++) {
+visit_queue.push(minheap_extract(heap));
+   } 
+
+return "iterating";
+
+} 
+else if(current_node == goal){
+    drawHighlightedPathGraph(current_node);
+    search_iterate = false;
+    console.log("yay");
+    return "succeeded";
+} 
+else {return "didn't find goal" ;}
+}
+
+function minheap_insert(heap, new_element) {
+
+heap[heap.length] = new_element;
+                
+if (heap.length > 1) {
+index = heap.length - 1;
+while (heap[index].fscore < heap[parent(index)].fscore) {
+                        
+[heap[parent(index)], heap[index]] = [heap[index], heap[parent(index)]];
+                    if (parent(index) > 0) {
+                        index = parent(index);}
+                         else {break;};
+                };
+            
+        }; 
+   
+}
+
+function parent(h) {
+if(h%2==0)
+        {return (h-2)/2;}
+
+    else{return (h-1)/2;};
+}
+
+function minheap_extract(heap) {
+
+smallest= heap[0];
+
+index=heap.length-1;
+[heap[0], heap[index]] = [heap[index], heap[0]];
+heap.length-- ;
+
+current=0;
+
+
+if(heap.length == 2){
+if(heap[0].fscore>heap[1].fscore){[heap[0], heap[1]] = [heap[1], heap[0]];}
+else{;}
+}
+
+else if(heap.length> 3){
+if(heap[1].fscore<heap[2].fscore){child=1;}
+else{child=2;}
+
+while(heap[child].fscore< heap[current].fscore){
+[heap[child], heap[current]] = [heap[current], heap[child]];
+
+current= child;
+if(left_child(current) >= heap.length){ break;}
+else if(right_child(current) == heap.length){ child = left_child(current);}
+else{
+if( heap[left_child(current)].fscore< heap[right_child(current)].fscore)
+{child= left_child(current);}
+    else{child= right_child(current);}
+
+    if (child < (index+1)) {;}
+    else {break;};
+}               
+}
+}
+return smallest;
+  
+}
+
+function left_child(h) {
+return 2*h+1 ;
+}
+
+function right_child(h){
+return 2*h+2;
+}
+
+function AStarSearch(){
+    q=[];
+
+    current_node = visit_queue.shift();
+    i_o=current_node.i;
+    j_o=current_node.j;
+
+G[i_o][j_o].visited = true;
+q= [ G[i_o][j_o].x, G[i_o][j_o].y ] ;
+draw_2D_configuration(q);
+search_visited++ ;
+
+
+if(testCollision(q)){ 
+    search_iterate = false;
+    return "failed";
+   
+}
+else if(current_node != goal){
+    path_length++;
+    draw_2D_configuration(q);
+
+    if(testCollision( [ G[i_o-1][j_o].x, G[i_o-1][j_o].y ] )){;}  
+    else if(G[i_o-1][j_o].queued == false){
+        visit_queue.push(G[i_o-1][j_o]);
+        G[i_o-1][j_o].parent = G[i_o][j_o];
+        G[i_o-1][j_o].queued = true;
+        G[i_o-1][j_o].distance = G[i_o][j_o].distance + eps;
+        G[i_o-1][j_o].hscore = Math.sqrt(Math.pow(i_o-1 - i_f, 2) + Math.pow(j_o - j_f, 2));
+        G[i_o-1][j_o].fscore = G[i_o-1][j_o].hscore + G[i_o-1][j_o].distance;}
+
+    if(testCollision( [ G[i_o+1][j_o].x, G[i_o+1][j_o].y ] )){;}      
+    else if(G[i_o+1][j_o].queued == false){
+        visit_queue.push(G[i_o+1][j_o]);
+        G[i_o+1][j_o].parent = G[i_o][j_o];
+        G[i_o+1][j_o].queued = true;
+        G[i_o+1][j_o].distance = G[i_o][j_o].distance + eps;
+        G[i_o+1][j_o].hscore = Math.sqrt(Math.pow(i_o+1 - i_f, 2) + Math.pow(j_o - j_f, 2));
+        G[i_o+1][j_o].fscore = G[i_o+1][j_o].hscore + G[i_o+1][j_o].distance;}
+
+    if(testCollision( [ G[i_o][j_o-1].x, G[i_o][j_o-1].y ] )){;}     
+    else if(G[i_o][j_o-1].queued == false){
+        visit_queue.push(G[i_o][j_o-1]);
+        G[i_o][j_o-1].queued = true;
+        G[i_o][j_o-1].parent = G[i_o][j_o];
+        G[i_o][j_o-1].distance = G[i_o][j_o].distance + eps;
+        G[i_o][j_o-1].hscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o-1- j_f, 2));
+        G[i_o][j_o-1].fscore = G[i_o][j_o-1].hscore + G[i_o][j_o-1].distance;}
+     
+    if(testCollision( [ G[i_o][j_o+1].x, G[i_o][j_o+1].y ] )){;}    
+    else if(G[i_o][j_o+1].queued == false){
+        visit_queue.push(G[i_o][j_o+1]);
+        G[i_o][j_o+1].queued = true;
+        G[i_o][j_o+1].parent = G[i_o][j_o];
+        G[i_o][j_o+1].distance = G[i_o][j_o].distance + eps;
+        G[i_o][j_o+1].hscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o +1- j_f, 2));
+        G[i_o][j_o+1].fscore = G[i_o][j_o+1].hscore + G[i_o][j_o+1].distance;} 
+
+       heap = [];
+   for (i=0;i<visit_queue.length;i++) {
+  minheap_insert(heap, visit_queue[i]);  }
+
+visit_queue = [];
+hl=heap.length;
+
+for (i=0;i<hl;i++) {
+visit_queue.push(minheap_extract(heap));
+   } 
+
+return "iterating";
+
+} 
+else if(current_node == goal){
+    drawHighlightedPathGraph(current_node);
+    search_iterate = false;
+    console.log("yay");
+    return "succeeded";
+} 
+else {return "didn't find goal" ;}
+}
+
 
 function iterateRRT() {
     // STENCIL: implement a single iteration of an RRT algorithm.
@@ -495,7 +727,8 @@ function drawHighlightedPathGraph(current_node) {
 }
 function initSearchGraph() {
     // KE: visit queue not created for certain values of eps
-    visit_queue = [];
+   visit_queue = [];
+   
     // initialize search graph as 2D array over configuration space 
     //   of 2D locations with specified spatial resolution 
     G = [];
@@ -509,7 +742,9 @@ function initSearchGraph() {
                 distance:10000, // distance to start via path through parent
                 visited:false, // flag for whether the node has been visited
                 priority:null, // visit priority based on fscore
-                queued:false // flag for whether the node has been queued for visiting
+                queued:false, // flag for whether the node has been queued for visiting
+                hscore:10000,
+                fscore:10000
             };
 
             // STENCIL: determine whether this graph node should be the start
@@ -534,16 +769,16 @@ function initSearchGraph() {
             j_f= G[iind][jind].j;
         }
         } 
+      
           G[iind][jind].queued = false;
         }
     }
-            //G[i_o-1][j_o].queued= false;
-           // G[i_o+1][j_o].queued= false;
-            //G[i_o][j_o-1].queued= false;
-            //G[i_o][j_o+1].queued= false;
            
            G[i_o][j_o].queued= true;
-//console.log(G[i_o-1][j_o-1].queued);
+           G[i_f][j_f].hscore= 0;
+          //G[i_f][j_f].hscore= 0;
+ 
+//console.log(visit_queue.length);
 }
 function setPlanningScene() {
     // obstacles specified as a range along [0] (x-dimension) and [1] y-dimension

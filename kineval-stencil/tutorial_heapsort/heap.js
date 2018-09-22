@@ -60,6 +60,8 @@ index=heap.length-1;
 heap.length-- ;
 current=0;
 
+//if(heap.length = 1){return heap[0];}
+
 if(heap.length < 3){
 if(heap[0]>heap[1]){[heap[0], heap[1]] = [heap[1], heap[0]];}
 else{;}
@@ -73,7 +75,9 @@ while(heap[child]< heap[current]){
 [heap[child], heap[current]] = [heap[current], heap[child]];
 
 current= child;
-if(right_child(current) == heap.length){ child = left_child(current);}
+if(left_child(current)== heap.length){break;}
+
+else if(right_child(current) == heap.length){ child = left_child(current);}
 else{
 if(	heap[left_child(current)]< heap[right_child(current)])
 {child= left_child(current);}
