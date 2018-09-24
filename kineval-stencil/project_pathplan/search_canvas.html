@@ -426,7 +426,7 @@ else if(current_node != goal){
         G[i_o-1][j_o].parent = G[i_o][j_o];
         G[i_o-1][j_o].queued = true;
         G[i_o-1][j_o].distance = G[i_o][j_o].distance + eps;
-        G[i_o-1][j_o].fscore = Math.sqrt(Math.pow(i_o-1 - i_f, 2) + Math.pow(j_o - j_f, 2));}
+        G[i_o-1][j_o].fscore = Math.sqrt(Math.pow(i_o-1 - i_f, 2) + Math.pow(j_o - j_f, 2))*0.1;}
 
     if(testCollision( [ G[i_o+1][j_o].x, G[i_o+1][j_o].y ] )){;}      
     else if(G[i_o+1][j_o].queued == false){
@@ -434,7 +434,7 @@ else if(current_node != goal){
         G[i_o+1][j_o].parent = G[i_o][j_o];
         G[i_o+1][j_o].queued = true;
         G[i_o+1][j_o].distance = G[i_o][j_o].distance + eps;
-        G[i_o+1][j_o].fscore = Math.sqrt(Math.pow(i_o+1 - i_f, 2) + Math.pow(j_o - j_f, 2));}
+        G[i_o+1][j_o].fscore = Math.sqrt(Math.pow(i_o+1 - i_f, 2) + Math.pow(j_o - j_f, 2))*0.1;}
 
     if(testCollision( [ G[i_o][j_o-1].x, G[i_o][j_o-1].y ] )){;}     
     else if(G[i_o][j_o-1].queued == false){
@@ -442,7 +442,7 @@ else if(current_node != goal){
         G[i_o][j_o-1].queued = true;
         G[i_o][j_o-1].parent = G[i_o][j_o];
         G[i_o][j_o-1].distance = G[i_o][j_o].distance + eps;
-        G[i_o][j_o-1].fscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o-1- j_f, 2));}
+        G[i_o][j_o-1].fscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o-1- j_f, 2))*0.1;}
      
     if(testCollision( [ G[i_o][j_o+1].x, G[i_o][j_o+1].y ] )){;}    
     else if(G[i_o][j_o+1].queued == false){
@@ -450,7 +450,7 @@ else if(current_node != goal){
         G[i_o][j_o+1].queued = true;
         G[i_o][j_o+1].parent = G[i_o][j_o];
         G[i_o][j_o+1].distance = G[i_o][j_o].distance + eps;
-        G[i_o][j_o+1].fscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o +1- j_f, 2));} 
+        G[i_o][j_o+1].fscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o +1- j_f, 2))*0.1;} 
 
        heap = [];
    for (i=0;i<visit_queue.length;i++) {
@@ -575,7 +575,7 @@ else if(current_node != goal){
         G[i_o-1][j_o].parent = G[i_o][j_o];
         G[i_o-1][j_o].queued = true;
         G[i_o-1][j_o].distance = G[i_o][j_o].distance + eps;
-        G[i_o-1][j_o].hscore = Math.sqrt(Math.pow(i_o-1 - i_f, 2) + Math.pow(j_o - j_f, 2));
+        G[i_o-1][j_o].hscore = Math.sqrt(Math.pow(i_o-1 - i_f, 2) + Math.pow(j_o - j_f, 2))*0.1;
         G[i_o-1][j_o].fscore = G[i_o-1][j_o].hscore + G[i_o-1][j_o].distance;}
 
     if(testCollision( [ G[i_o+1][j_o].x, G[i_o+1][j_o].y ] )){;}      
@@ -584,7 +584,7 @@ else if(current_node != goal){
         G[i_o+1][j_o].parent = G[i_o][j_o];
         G[i_o+1][j_o].queued = true;
         G[i_o+1][j_o].distance = G[i_o][j_o].distance + eps;
-        G[i_o+1][j_o].hscore = Math.sqrt(Math.pow(i_o+1 - i_f, 2) + Math.pow(j_o - j_f, 2));
+        G[i_o+1][j_o].hscore = Math.sqrt(Math.pow(i_o+1 - i_f, 2) + Math.pow(j_o - j_f, 2))*0.1;
         G[i_o+1][j_o].fscore = G[i_o+1][j_o].hscore + G[i_o+1][j_o].distance;}
 
     if(testCollision( [ G[i_o][j_o-1].x, G[i_o][j_o-1].y ] )){;}     
@@ -593,7 +593,7 @@ else if(current_node != goal){
         G[i_o][j_o-1].queued = true;
         G[i_o][j_o-1].parent = G[i_o][j_o];
         G[i_o][j_o-1].distance = G[i_o][j_o].distance + eps;
-        G[i_o][j_o-1].hscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o-1- j_f, 2));
+        G[i_o][j_o-1].hscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o-1- j_f, 2))*0.1;
         G[i_o][j_o-1].fscore = G[i_o][j_o-1].hscore + G[i_o][j_o-1].distance;}
      
     if(testCollision( [ G[i_o][j_o+1].x, G[i_o][j_o+1].y ] )){;}    
@@ -602,7 +602,7 @@ else if(current_node != goal){
         G[i_o][j_o+1].queued = true;
         G[i_o][j_o+1].parent = G[i_o][j_o];
         G[i_o][j_o+1].distance = G[i_o][j_o].distance + eps;
-        G[i_o][j_o+1].hscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o +1- j_f, 2));
+        G[i_o][j_o+1].hscore = Math.sqrt(Math.pow(i_o - i_f, 2) + Math.pow(j_o +1- j_f, 2))*0.1;
         G[i_o][j_o+1].fscore = G[i_o][j_o+1].hscore + G[i_o][j_o+1].distance;} 
 
        heap = [];
