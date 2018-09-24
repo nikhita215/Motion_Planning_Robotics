@@ -110,7 +110,7 @@ hr {
         </section>
 <br>
 	<p>
-	We see here that the path generated using depth-first search is not optimal. This happens because in depth-first search the nodes are explored only in one direction without any consideration of the goal or the start. 
+	We see here that the path generated using depth-first search is not optimal. This happens because in depth-first search the nodes are explored only in one direction without any consideration of the goal or the start and they are explored on a last in first out basis.
 	</p>
 	<p>
 	Once it encounters a dead end it has to come all the way back until it finds a neighbor of a node that has been not visited, hence it takes a lot of time to execute. Depth-first search almost never gives the shortest path but it is a easy algorithm to implement when we have no other information.	
@@ -122,9 +122,15 @@ hr {
     <section class="products">
         <p>
             <p>
-    In this search algorithm we explore all the neighbours of a node before going to the next node. Using breadth-first search we will always find the shortest path but as you can see below the number of iterations and the nodes visited is really large, hence the computation time is really high. 
-            </p>
+    As you can see in the first image in this search algorithm we explore all the neighbours of a node before going to the next node. Here the nodes are explored in a last in first out basis. Using breadth-first search we will always find the shortest path but the number of iterations and the nodes visited is really large, hence the computation time is really high. In Case-1, I increased the value of epsilon to 0.2, hence the start and goal configurations are not exactly matching with the planning world and even when the value of epsilon is multiplied by 2 the no.of iterations is still more than greedy search or A-star.
+                </p>
            <div class="fans">
+            <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="bfs_progress.png" alt="Narrow2" style=""  />
+                            <figcaption>Progress of a breadth-first search</figcaption>
+                        </figure>
+                </div>
                 <div class="captioned-image">
                         <figure>
                             <img class="fans" src="bfs_empty.png" alt="Empty" style="" />
@@ -155,6 +161,7 @@ hr {
                             <figcaption>Case-5: BFS, Planning Scene = Narrow2</figcaption>
                         </figure>
                 </div>
+                
 
             </div>
         </p>
@@ -217,13 +224,13 @@ hr {
 <br>
 	
 	<p>
-	But the only problem with this algorithm is that it maynot always give the shortest path from start to stop. As you can see in Case-3 and Case-4 even though there is an obstacle in the direction towards the goal the algorithm ensures that the nodes closer to the goal are explored first and then the rest. Even though the path given using this algorithm may not be optimal it requires less no of iterations compared to others. 
+	But the only problem with this algorithm is that it maynot always give the shortest path from start to stop. As you can see in Case-3 and Case-4 even though there is an obstacle in the direction towards the goal the algorithm ensures that the nodes closer to the goal are explored first and then the rest, this happenes because greedy search chooses the best possible option during each iteration with out consideration of the future. Even though the path given using this algorithm may not be optimal it requires less no of iterations compared to others, hence it is really fast.
 	</p>
  <p style="clear:both;"></p>
 <hr color="black" size="3" />
 	<h2> A-star search </h2>
     <p>
-    In order to avoid the problems caused due to Greedy-Best-First search we added another metric to this algorithm which represents the distance from the current node to the start. This ensures that we don't go to far from the start to avoid the obstacles. As you can see in Case-3 and Case-4, for the same start and goal configurations A-star gave a shorter path compared to Greedy search.
+    In order to avoid the problems caused due to Greedy-Best-First search we added another metric to this algorithm which represents the distance from the current node to the start. This ensures that we explore all the good paths before finding the final path unlike greedy search where only the best option is explored. As you can see in Case-3 and Case-4, for the same start and goal configurations A-star gave a shorter path compared to Greedy search. A-star is a combination of both breadth-first search and greedy-best-first search in terms of speed and optimal path.
     </p>
      <section class="products">
      
@@ -282,7 +289,7 @@ hr {
                 
                 <br>
     <p>
-    For the same start and goal configurations of (4,4) and (0,0) as in case-4 of GBFS and A-star we see that we got the same pathlength as A-star using breadth-first search. Using the depth-first search as expected the path length is more.
+    For the same start and goal configurations of (4,4) and (0,0) as in case-4 of GBFS and A-star we see that we got the same pathlength as A-star using breadth-first search, but the no.of nodes visited is really large. Using the depth-first search as expected the path length is more.
     </p>
             </div>
     </section>
