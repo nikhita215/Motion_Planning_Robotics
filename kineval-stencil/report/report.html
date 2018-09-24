@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ME-567</title>
+	
+<h1>Project Pathplan Report</h1>
+<style>
+hr { 
+    display: black;
+    margin-top: 0px;
+    margin-bottom: 0em;
+    margin-left: 0px;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 0.05px;
+}
+</style> 
+<hr color="black" size="4" />
+</head>
+<body>
+
+	 <style type="text/css">
+        .fans li{
+            display: inline;
+        }
+        .fans .captioned-image {
+            display:inline-block;
+            width:450px;
+        }
+
+        .fans figure {
+            width: 400px;
+            display:block;
+            text-align:center;
+        }
+
+        img {
+            width: 400px;
+            height: 500px;
+            border: solid black 1px;
+            padding: 5px;
+
+        }
+    </style>
+    <style type="text/css">
+        .fan li{
+            display: inline;
+        }
+        .fan .captioned-images {
+            display:inline-block;
+            width:450px;
+        }
+
+        .fan figure {
+            float: left;
+            width: 400px;
+            display:block;
+            text-align:center;
+        }
+
+        img {
+            width: 400px;
+            height: 500px;
+            border: solid black 1px;
+            padding: 5px;
+
+        }
+    </style>
+<section class="products">
+        <h2> Depth-first search </h2>
+        <p>
+           <div class="fans">
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="dfs_empty.png" alt="Empty" style="" />
+                            <figcaption>Case-1: DFS, Planning Scene = Empty</figcaption>
+                        </figure>
+                </div>
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="dfs_misc.png" alt="Misc" style="" />
+                            <figcaption>Case-2: DFS, Planning Scene = Misc</figcaption>
+                        </figure>
+                </div>
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="dfs_3sections.png" alt="3sections" style="" />
+                            <figcaption>Case-3: DFS, Planning Scene = Three Sections</figcaption>
+                        </figure>
+                </div>
+
+            </div>
+        </p>
+    </section>
+    <section class="products">
+        <div class="fan">
+            <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="dfs_narrow1.png" alt="Narrow1" style="" align="left" />
+                            <figcaption>Case-4: DFS, Planning Scene = Narrow1</figcaption>
+                        </figure>
+            </div>
+            <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="dfs_narrow2.png" alt="Narrow2" style=""  />
+                            <figcaption>Case-5: DFS, Planning Scene = Narrow2</figcaption>
+                        </figure>
+            </div>
+        </div>
+        </section>
+<br>
+	<p>
+	We see here that the path generated using depth-first search is not optimal. This happens because in depth-first search the nodes are explored only in one direction without any consideration of the goal or the start. 
+	</p>
+	<p>
+	Once it encounters a dead end it has to come all the way back until it finds a neighbor of a node that has been not visited, hence it takes a lot of time to execute. Depth-first search almost never gives the shortest path but it is a easy algorithm to implement when we have no other information.	
+	</p>
+
+        <p style="clear:both;">
+<hr color="black" size="3" />
+	<h2> Breadth-first search </h2>
+    <section class="products">
+        <p>
+            <p>
+    In this search algorithm we explore all the neighbours of a node before going to the next node. Using breadth-first search we will always find the shortest path but as you can see below the number of iterations and the nodes visited is really large, hence the computation time is really high. 
+            </p>
+           <div class="fans">
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="bfs_empty.png" alt="Empty" style="" />
+                            <figcaption>Case-1: BFS, Planning Scene = Empty</figcaption>
+                        </figure>
+                </div>
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="bfs_misc.png" alt="Misc" style="" />
+                            <figcaption>Case-2: BFS, Planning Scene = Misc</figcaption>
+                        </figure>
+                </div>
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="bfs_3sections.png" alt="3sections" style="" />
+                            <figcaption>Case-3: BFS, Planning Scene = Three Sections</figcaption>
+                        </figure>
+                </div>
+                 <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="bfs_narrow1.png" alt="Narrow1" style="" />
+                            <figcaption>Case-4: BFS, Planning Scene = Narrow1</figcaption>
+                        </figure>
+                </div>
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="bfs_narrow2.png" alt="Narrow2" style=""  />
+                            <figcaption>Case-5: BFS, Planning Scene = Narrow2</figcaption>
+                        </figure>
+                </div>
+
+            </div>
+        </p>
+    </section>
+    <section class="products">
+        <div class="fan">
+           
+        </div>
+        </section>
+<br>
+	
+</p>
+
+<hr color="black" size="3" />
+	<h2> Greedy-best first search </h2>
+    <p>
+    As you noticed in DFS and BFS there is no metric as to where the goal is and the direction you are going. So in this algorithm we give it a sense of direction. So the nodes are given priority if they are closer to the goal.
+    </p>
+    <section class="products">
+        <p>
+           <div class="fans">
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="gbfs_empty.png" alt="Empty" style="" />
+                            <figcaption>Case-1: GBFS, Planning Scene = Empty</figcaption>
+                        </figure>
+                </div>
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="gbfs_misc.png" alt="Misc" style="" />
+                            <figcaption>Case-2: GBFS, Planning Scene = Misc</figcaption>
+                        </figure>
+                </div>
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="gbfs_3sections.png" alt="3sections" style="" />
+                            <figcaption>Case-3: GBFS, Planning Scene = Three Sections</figcaption>
+                        </figure>
+                </div>
+
+            </div>
+        </p>
+    </section>
+    <section class="products">
+        <div class="fan">
+            <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="gbfs_narrow1.png" alt="Narrow1" style="" align="left" />
+                            <figcaption>Case-4: GBFS, Planning Scene = Narrow1</figcaption>
+                        </figure>
+            </div>
+            <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="gbfs_narrow2.png" alt="Narrow2" style=""  />
+                            <figcaption>Case-5: GBFS, Planning Scene = Narrow2</figcaption>
+                        </figure>
+            </div>
+        </div>
+        </section>
+<br>
+	
+	<p>
+	But the only problem with this algorithm is that it maynot always give the shortest path from start to stop. As you can see in Case-3 and Case-4 even though there is an obstacle in the direction towards the goal the algorithm ensures that the nodes closer to the goal are explored first and then the rest. Even though the path given using this algorithm may not be optimal it requires less no of iterations compared to others. 
+	</p>
+ <p style="clear:both;"></p>
+<hr color="black" size="3" />
+	<h2> A-star search </h2>
+    <p>
+    In order to avoid the problems caused due to Greedy-Best-First search we added another metric to this algorithm which represents the distance from the current node to the start. This ensures that we don't go to far from the start to avoid the obstacles. As you can see in Case-3 and Case-4, for the same start and goal configurations A-star gave a shorter path compared to Greedy search.
+    </p>
+     <section class="products">
+     
+           <div class="fans">
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="astar_empty.png" alt="Empty" style="" />
+                            <figcaption>Case-1: A-star, Planning Scene = Empty</figcaption>
+                        </figure>
+                </div>
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="astar_misc.png" alt="Misc" style="" />
+                            <figcaption>Case-2: A-star, Planning Scene = Misc</figcaption>
+                        </figure>
+                </div>
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="astar_3sections.png" alt="3sections" style="" />
+                            <figcaption>Case-3: A-star, Planning Scene = Three Sections</figcaption>
+                        </figure>
+                </div>
+                 <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="astar_narrow1.png" alt="Narrow1" style=""  />
+                            <figcaption>Case-4: A-star, Planning Scene = Narrow1</figcaption>
+                        </figure>
+                </div>
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="astar_narrow2.png" alt="Narrow2" style=""  />
+                            <figcaption>Case-5: A-star, Planning Scene = Narrow2</figcaption>
+                        </figure>
+                </div>
+
+            </div>
+        
+    </section>
+    <hr color= "black" size="3">
+    <section class="products">
+        <h2>Miscellaneous</h2>
+             <div class="fan">
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fan" src="dfs_same.png" alt="Empty" style="" />
+                            <figcaption>Case-1: DFS, Start = (4,4), Goal = (0,0)</figcaption>
+                        </figure>
+                </div>
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fan" src="bfs_same.png" alt="Misc" style=""  />
+                            <figcaption>Case-2: BFS, Start = (4,4), Goal = (0,0)</figcaption>
+                        </figure>
+                </div>
+
+                
+                <br>
+    <p>
+    For the same start and goal configurations of (4,4) and (0,0) as in case-4 of GBFS and A-star we see that we got the same pathlength as A-star using breadth-first search. Using the depth-first search as expected the path length is more.
+    </p>
+            </div>
+    </section>
+    <p style="clear:both;"></p>
+     <section class="products">
+
+             <div class="fan">
+                <div class="captioned-image">
+                        <figure>
+                            <img class="fans" src="start_collision.png" alt="Empty" style="" align="left" />
+                            <figcaption>As expected when the start node is in collision with the obstacle the search returned as failed</figcaption>
+                        </figure>
+                </div>
+                <br>
+    
+            </div>
+    </section>
+
+	
+</body>
+
+</html>
