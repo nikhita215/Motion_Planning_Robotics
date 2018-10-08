@@ -161,7 +161,7 @@ function animate() {
     
     accumulated_error[0] = accumulated_error[0] + pendulum.desired[0] - pendulum.angle[0] ;
     accumulated_error[1] = accumulated_error[1] + pendulum.desired[1] - pendulum.angle[1] ;
-    console.log(pendulum.control);
+    //console.log(pendulum.control);
     }
 
     // toggle activation of servo controller from user interaction
@@ -194,10 +194,6 @@ function animate() {
 
     pendulum.angle_dot[0] = pendulum.angle_dot[0] + pendulum_acceleration(pendulum_previous,gravity)[0] * dt; 
     pendulum.angle_dot[1] = pendulum.angle_dot[1] + pendulum_acceleration(pendulum_previous,gravity)[1] * dt; 
-    
-    //ke= 4*pendulum.angle_dot[0]*pendulum.angle_dot[0] + 2*pendulum.angle_dot[1]*pendulum.angle_dot[1] + 8*pendulum.angle_dot[0]*pendulum.angle_dot[1]*Math.cos(pendulum.angle[0]-pendulum.angle[1])-78.48*Math.cos(pendulum.angle[0])-39.24*Math.cos(pendulum.angle[1]);
-
-   //console.log(ke);
     
     }
     /*else if (numerical_integrator === "verlet") {
@@ -238,53 +234,45 @@ function animate() {
     k_x2 = [0,0];
     k_x3 = [0,0];
     k_x4 = [0,0];
-    orig_angle= [0,0];
-    orig_angle_dot= [0,0];
+    angle= [0,0];
+    angle_dot= [0,0];
     
-    orig_angle[0]= pendulum.angle[0];
-    orig_angle[1]= pendulum.angle[1];
-    orig_angle_dot[0]= pendulum.angle_dot[0];
-    orig_angle_dot[1]= pendulum.angle_dot[1];
+    angle= pendulum.angle;
+    angle_dot= pendulum.angle_dot;
+   // console.log(angle);
 
+    k_v1 = angle_dot ;
     k_a1 = pendulum_acceleration(pendulum,gravity);
-    k_v1[0] = orig_angle_dot[0] ;
-    k_v1[1] = orig_angle_dot[1] ;
     
-    k_x2[0] = pendulum.angle[0] + k_v1[0]*dt*0.5;
-    k_x2[1] = pendulum.angle[1] + k_v1[1]*dt*0.5;
-    k_v2[0] = orig_angle_dot[0] + k_a1[0]*dt*0.5;
-    k_v2[1] = orig_angle_dot[1] + k_a1[1]*dt*0.5;
+    k_x2[0] = angle[0] + k_v1[0]*dt*0.5;
+    k_x2[1] = angle[1] + k_v1[1]*dt*0.5;
+    k_v2[0] = angle_dot[0] + k_a1[0]*dt*0.5;
+    k_v2[1] = angle_dot[1] + k_a1[1]*dt*0.5;
     pendulum.angle = k_x2;
     pendulum.angle_dot = k_v2; 
     k_a2 = pendulum_acceleration(pendulum,gravity);
-    //k_v2[0] = pendulum.angle_dot[0] + k_a2[0]*dt/2;
-    //k_v2[1] = pendulum.angle_dot[1] + k_a2[1]*dt/2;
 
-    k_x3[0] = orig_angle[0] + k_v2[0]*dt*0.5;
-    k_x3[1] = orig_angle[1] + k_v2[1]*dt*0.5;
-    k_v3[0] = orig_angle_dot[0] + k_a2[0]*dt*0.5;
-    k_v3[1] = orig_angle_dot[1] + k_a2[1]*dt*0.5;
+    k_x3[0] = angle[0] + k_v2[0]*dt*0.5;
+    k_x3[1] = angle[1] + k_v2[1]*dt*0.5;
+    k_v3[0] = angle_dot[0] + k_a2[0]*dt*0.5;
+    k_v3[1] = angle_dot[1] + k_a2[1]*dt*0.5;
     pendulum.angle = k_x3;
     pendulum.angle_dot = k_v3;
     k_a3 = pendulum_acceleration(pendulum,gravity);
-   // k_v3[0] = pendulum.angle_dot[0] + k_a3[0]*dt/2;
-    //k_v3[1] = pendulum.angle_dot[1] + k_a3[1]*dt/2;
     
-    k_x4[0] = orig_angle[0] + k_v3[0]*dt;
-    k_x4[1] = orig_angle[1] + k_v3[1]*dt;
-    k_v4[0] = orig_angle_dot[0] + k_a3[0]*dt;
-    k_v4[1] = orig_angle_dot[1] + k_a3[1]*dt;
+    k_x4[0] = angle[0] + k_v3[0]*dt;
+    k_x4[1] = angle[1] + k_v3[1]*dt;
+    k_v4[0] = angle_dot[0] + k_a3[0]*dt;
+    k_v4[1] = angle_dot[1] + k_a3[1]*dt;
     pendulum.angle = k_x4;
     pendulum.angle_dot = k_v4;
     k_a4 = pendulum_acceleration(pendulum,gravity);
-   // k_v4[0] = pendulum.angle_dot[0] + k_a4[0]*dt;
-   // k_v4[1] = pendulum.angle_dot[1] + k_a4[1]*dt;
 
     
-    pendulum.angle[0] = orig_angle[0] + [k_v1[0]+2*k_v2[0]+2*k_v3[0]+k_v4[0]]*dt/6;
-    pendulum.angle[1] = orig_angle[1] + [k_v1[1]+2*k_v2[1]+2*k_v3[1]+k_v4[1]]*dt/6;
-    pendulum.angle_dot[0] = orig_angle_dot[0] +[k_a1[0]+2*k_a2[0]+2*k_a3[0]+k_a4[0]]*dt/6;
-    pendulum.angle_dot[1] = orig_angle_dot[1] +[k_a1[1]+2*k_a2[1]+2*k_a3[1]+k_a4[1]]*dt/6;
+    pendulum.angle[0] = angle[0] + [k_v1[0]+2*k_v2[0]+2*k_v3[0]+k_v4[0]]*dt/6;
+    pendulum.angle[1] = angle[1] + [k_v1[1]+2*k_v2[1]+2*k_v3[1]+k_v4[1]]*dt/6;
+    pendulum.angle_dot[0] = angle_dot[0] +[k_a1[0]+2*k_a2[0]+2*k_a3[0]+k_a4[0]]*dt/6;
+    pendulum.angle_dot[1] = angle_dot[1] +[k_a1[1]+2*k_a2[1]+2*k_a3[1]+k_a4[1]]*dt/6;
    
    
     } 
