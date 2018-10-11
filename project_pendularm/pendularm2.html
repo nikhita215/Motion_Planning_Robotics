@@ -96,7 +96,6 @@ function init() {
     servo_error_threshold = 0.001; // threshold for achieving desired
     servo_active_persist = false; // toggle to turn on servo controller
     servo_active_state = {}; // string with current state of servo activation
-    current_achieved = false;
     //STENCIL: for verlet integration, a first step in time is needed
     
     document.addEventListener('keydown', function(e) {
@@ -161,11 +160,7 @@ function animate() {
     
     accumulated_error[0] = accumulated_error[0] + pendulum.desired[0] - pendulum.angle[0] ;
     accumulated_error[1] = accumulated_error[1] + pendulum.desired[1] - pendulum.angle[1] ;
-
-    if (pendulum.angle == pendulum_previous.angle) current_achieved= true;
     }
-
-    if(current_achieved){  pendulum.desired = Math.floor(Math.random() * 4*Math.PI) - 2*Math.PI;}
 
     // toggle activation of servo controller from user interaction
     if (keyboard.pressed("c"))
