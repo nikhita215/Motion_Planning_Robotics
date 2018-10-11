@@ -73,6 +73,8 @@ function init() {
     servo_error_threshold = 0.001; // threshold for achieving desired
     servo_active_persist = false; // toggle to turn on servo controller
     servo_active_state = {}; // string with current state of servo activation
+    current_achieved = false;
+    random = false;
     //STENCIL: for verlet integration, a first step in time is needed
     
     pendulum.angle_previous = pendulum.angel;
@@ -122,8 +124,11 @@ function animate() {
         pendulum.servo.ki = 50;
     pendulum.control = pendulum.servo.kp*[pendulum.desired-pendulum.angle] + pendulum.servo.ki*accumulated_error - pendulum.servo.kd*[pendulum.angle - pendulum.angle_previous]/dt ;
     accumulated_error = accumulated_error + pendulum.desired - pendulum.angle;
-    //if(pendulum.desired-pendulum.angle == 0 && pendulum.desired-pendulum.angle_previous == 0 ){accumulated_error};
+    if(Math.abs(pendulum.desired-pendulum.angle) <= servo_error_threshold && Math.abs(pendulum.desired-pendulum.angle_previous) <= servo_error_threshold ){current_achieved= true;}
+
     }
+    if(random)
+     if(current_achieved){  pendulum.desired = Math.floor(Math.random() * 2*Math.PI) - Math.PI; current_achieved=false;}
     // toggle activation of servo controller from user interaction
     if (keyboard.pressed("c"))
         servo_active_persist = !servo_active_persist;
@@ -133,6 +138,8 @@ function animate() {
         accumulated_error = 0;
         servo_active_state = "disabled";
     }
+    if (keyboard.pressed("r"))
+        random = !random;
     else
         servo_active_state = "active";
     // integrate pendulum state forward in time by dt
@@ -199,6 +206,7 @@ function animate() {
     pendulum.geom.rotation.y = pendulum.angle;  // threejs cylinders have their axes along the y-axis
     // advance time
     t = t + dt;
+    console.log(t);
     textbar.innerHTML = 
         "System <br> " +
         " t = " + t.toFixed(2) + 
@@ -234,7 +242,9 @@ function animate() {
         "<br>" +
         " c|x - toggle servo " +
         "<br>" +
-        " s - disable servo "
+        " s - disable servo "+
+        "<br>" +
+        " r - generate random point "
     ;
     // threejs rendering update
     renderer.render( scene, camera );
