@@ -28,7 +28,7 @@ kineval.initRobotLinks = function initRobotLinks() {
     for (x in robot.links) {
         robot.links[x].name = x;
     }
-
+    //robot.links_geom_imported = true;
     // initialize controls for robot base link
     robot.control = {xyz: [0,0,0], rpy:[0,0,0]}; 
 }
@@ -39,7 +39,8 @@ kineval.initRobotJoints = function initRobotJoints() {
     //   and insert threejs scene graph (each joint and link are directly connect to scene root)
     // NOTE: kinematic hierarchy is maintained independently by this code, not threejs
 
-    var x,tempmat;
+    var x,tempmat,y;
+    visit = {};
 
     for (x in robot.joints) {
 
@@ -50,16 +51,32 @@ kineval.initRobotJoints = function initRobotJoints() {
         robot.joints[x].angle = 0;
         robot.joints[x].control = 0;
         robot.joints[x].servo = {};
-    // STENCIL: set appropriate servo gains for arm setpoint control
+        // STENCIL: set appropriate servo gains for arm setpoint control
         robot.joints[x].servo.p_gain = 0; 
         robot.joints[x].servo.p_desired = 0;
         robot.joints[x].servo.d_gain = 0; 
+     
 
+        visit[x] = false;
     // STENCIL: complete kinematic hierarchy of robot for convenience.
     //   robot description only specifies parent and child links for joints.
     //   additionally specify parent and child joints for each link
-
     }
+
+    for (y in robot.links){
+        robot.links[y].children = [];}
+        
+    for (y in robot.links){
+        for (x in robot.joints){
+            if(robot.joints[x].child == y)
+                robot.links[y].parent = x;
+            if(robot.joints[x].parent == y)
+                robot.links[y].children[robot.links[y].children.length] = x;
+                
+
+        }
+    }
+
 
 }
 

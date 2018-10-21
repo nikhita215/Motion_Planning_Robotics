@@ -41,7 +41,7 @@ function matrix_2Darray_to_threejs(amat) {
         amat[3][0], amat[3][1], amat[3][2], amat[3][3] 
     );
     */
-
+//console.log(amat);
     var tmat = new THREE.Matrix4().set(
         amat[0][0], amat[0][1], amat[0][2], amat[0][3],
         amat[1][0], amat[1][1], amat[1][2], amat[1][3],

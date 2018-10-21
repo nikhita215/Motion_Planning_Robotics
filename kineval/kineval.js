@@ -29,6 +29,7 @@ console.log("KinEval: Kinematic Evaluator 3");
 // function to initialize KinEval and start its animation loop
 kineval.start = function kinevalExecute() {
 
+//console.log(robot.links_geom_imported);
     console.log(" **** >>> kineval.start"); 
     // KinEval should not do anything until there is a robot and a world loaded
     var x;

@@ -183,8 +183,8 @@ kineval.tutorialJavaScript = function tutorialJSCoding() {
     // if copiedObject does not already exist
     if (typeof copiedObject === 'undefined') {  
 
-        console.log(myObject);  // check it out on the console  
-        console.log(JSON.stringify(myObject));  // same thing as a string  
+        // console.log(myObject);  // check it out on the console  
+        //console.log(JSON.stringify(myObject));  // same thing as a string  
 
         /* IMPORTANT!!! 
              objects are not "deep" copied upon assignment.  This assignment 
@@ -218,7 +218,7 @@ kineval.tutorialJavaScript = function tutorialJSCoding() {
     // output each element to the console
     var i;  // local variable serving as an iterator through an array
     for (i=0;i<myArray.length;i++) {
-        console.log(myArray[i]);  
+    //    console.log(myArray[i]);  
     }
 
     // JAVASCRIPT TUTORIAL: Dynamic typing
@@ -260,7 +260,7 @@ kineval.tutorialJavaScript = function tutorialJSCoding() {
         // output each key/value of myObject to console as formatted strings
         for (i=0;i<myObjectKeys.length;i++) {
             var x = myObjectKeys[i];
-            console.log("AutoRob " + x + " is " + inputObject[x]);
+         //   console.log("AutoRob " + x + " is " + inputObject[x]);
         }
 
         /* the reserved variable "this" is a reference based on the context
