@@ -89,12 +89,26 @@ function traverseFKBase(){
 
 function traverseFKLink(b){
 
-    var mat = [];
+    var mat,q = [];
 
     mat = matrix_multiply(generate_rotation_matrix_Y(robot.joints[b].origin.rpy[1]),generate_rotation_matrix_X(robot.joints[b].origin.rpy[0]));
     mat = matrix_multiply(generate_rotation_matrix_Z(robot.joints[b].origin.rpy[2]),mat);
     mat = matrix_multiply(generate_translation_matrix(robot.joints[b].origin.xyz),mat); 
-    mat = matrix_multiply(matrix_stack[matrix_stack.length-1],mat); 
+     
+
+    if(robot.joints[b].type == "prismatic"){
+        trans = generate_translation_matrix(robot.joints[b].axis);
+        for (var i = 0; i < 3; i++) {
+           trans[i][3] *= robot.joints[b].angle; 
+        }
+        mat = matrix_multiply(mat, trans);
+    }
+    else if(robot.joints[b].type == "revolute" || robot.joints[b].type == "continuous" || robot.joints[b].type == "undefined"){
+       q = quaternion_from_axisangle(robot.joints[b]);
+       mat = matrix_multiply(mat, quaternion_to_rotation_matrix(q));
+    }
+
+    mat = matrix_multiply(matrix_stack[matrix_stack.length-1],mat);
     matrix_stack[matrix_stack.length] = mat;
     robot.joints[b].xform = matrix_stack[matrix_stack.length-1];
     traverseFKJoint(robot.joints[b].child);
