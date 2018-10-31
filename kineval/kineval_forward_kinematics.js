@@ -103,11 +103,11 @@ function traverseFKLink(b){
         }
         mat = matrix_multiply(mat, trans);
     }
-    else if(robot.joints[b].type == "revolute" || robot.joints[b].type == "continuous" || robot.joints[b].type == "undefined"){
+    else if(robot.joints[b].type === "revolute" || robot.joints[b].type === "continuous" || typeof robot.joints[b].type === 'undefined'){
        q = quaternion_from_axisangle(robot.joints[b]);
        mat = matrix_multiply(mat, quaternion_to_rotation_matrix(q));
     }
-
+    
     mat = matrix_multiply(matrix_stack[matrix_stack.length-1],mat);
     matrix_stack[matrix_stack.length] = mat;
     robot.joints[b].xform = matrix_stack[matrix_stack.length-1];

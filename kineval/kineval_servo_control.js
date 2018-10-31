@@ -82,7 +82,7 @@ kineval.setpointDanceSequence = function execute_setpoints() {
     }
     if(kineval.params.dance_pose_index == 17){
        robot.control.xyz[0] = 0.01;
-       robot.control.rpy[1] = 0.155;
+       robot.control.rpy[1] = 0.1525;
     }
 }
 /*
