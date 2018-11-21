@@ -325,8 +325,8 @@ kineval.initParameters = function initParameters() {
     // KE 3 : ik_target param is redundant as an argument into inverseKinematics 
     kineval.params.ik_target = {};
     kineval.params.ik_target.position = [[0],[0.8],[1.0],[1]];
-    //kineval.params.ik_target.orientation = [Math.PI/6, Math.PI/4, 0];
-    kineval.params.ik_target.orientation = [Math.PI/2, 0, 0];
+    kineval.params.ik_target.orientation = [Math.PI/6, Math.PI/4, 0];
+    //kineval.params.ik_target.orientation = [Math.PI/2, 0, 0];
     kineval.params.ik_orientation_included = false;
     kineval.params.ik_steplength = 0.1;
     kineval.params.ik_pseudoinverse = false;
