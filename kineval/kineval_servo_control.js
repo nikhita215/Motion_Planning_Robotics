@@ -159,12 +159,12 @@ kineval.robotArmControllerSetpoint = function robot_pd_control () {
         robot.joints[x].control = robot.joints[x].servo.p_gain*(kineval.params.setpoint_target[x] - robot.joints[x].angle); 
     }
     }
-    if (robot.name === 'baxter') {
+    else
+        
       for (x in robot.joints) {
         robot.joints[x].servo.p_gain = 0.118;
         robot.joints[x].control = robot.joints[x].servo.p_gain*(kineval.params.setpoint_target[x] - robot.joints[x].angle); 
-    }  
-    }
+    } 
     
     
 

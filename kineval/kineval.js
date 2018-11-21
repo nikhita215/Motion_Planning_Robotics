@@ -208,10 +208,10 @@ kineval.robotDraw = function drawRobot() {
             matrix_multiply(
                 generate_translation_matrix(kineval.params.ik_target.position[0][0],kineval.params.ik_target.position[1][0],kineval.params.ik_target.position[2][0]),
                 matrix_multiply(
-                    generate_rotation_matrix_X(kineval.params.ik_target.orientation[0]),
+                    generate_rotation_matrix_Z(kineval.params.ik_target.orientation[2]),
                     matrix_multiply(
                         generate_rotation_matrix_Y(kineval.params.ik_target.orientation[1]),
-                        generate_rotation_matrix_Z(kineval.params.ik_target.orientation[2])
+                        generate_rotation_matrix_X(kineval.params.ik_target.orientation[0])
         ))));
     else 
         var target_mat = matrix_2Darray_to_threejs(generate_translation_matrix(kineval.params.ik_target.position[0][0],kineval.params.ik_target.position[1][0],kineval.params.ik_target.position[2][0]));
@@ -325,7 +325,8 @@ kineval.initParameters = function initParameters() {
     // KE 3 : ik_target param is redundant as an argument into inverseKinematics 
     kineval.params.ik_target = {};
     kineval.params.ik_target.position = [[0],[0.8],[1.0],[1]];
-    kineval.params.ik_target.orientation = [Math.PI/6, Math.PI/4, 0];
+    //kineval.params.ik_target.orientation = [Math.PI/6, Math.PI/4, 0];
+    kineval.params.ik_target.orientation = [Math.PI/2, 0, 0];
     kineval.params.ik_orientation_included = false;
     kineval.params.ik_steplength = 0.1;
     kineval.params.ik_pseudoinverse = false;

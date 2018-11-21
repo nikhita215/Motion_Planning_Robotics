@@ -44,13 +44,23 @@ function matrix_transpose(m1) {
 
     var mat = [];
     var i,j;
-
-    for (i=0;i<m1.length;i++) { // for each row of m1
+    /*
+    if(typeof m1[0].length == 'undefined'){
+        for (i=0;i<6;i++) { // for each row of m1
+        mat[i] = [];}
+        for (j=0;j<m1.length;j++) { // for each column of m1
+            mat[j][0] = m1[j];
+        }
+    }
+    */
+    
+    for (i=0;i<m1[0].length;i++) { // for each row of m1
         mat[i] = [];
-        for (j=0;j<m1[0].length;j++) { // for each column of m1
+        for (j=0;j<m1.length;j++) { // for each column of m1
             mat[i][j] = m1[j][i];
         }
     }
+    
     return mat;
 }  
     //   matrix_pseudoinverse
@@ -96,7 +106,7 @@ function generate_identity(a){
 
 }
     //   generate_translation_matrix
-function generate_translation_matrix(a){
+function generate_translation_matrix(a,b,c){
    
     var mat = [];
     var i,j;
@@ -111,9 +121,9 @@ function generate_translation_matrix(a){
     mat[1][1] = 1;
     mat[2][2] = 1;
     mat[3][3] = 1;
-    mat[0][3] = a[0];
-    mat[1][3] = a[1];
-    mat[2][3] = a[2];
+    mat[0][3] = a;
+    mat[1][3] = b;
+    mat[2][3] = c;
     return mat;
 
 }
@@ -183,9 +193,10 @@ function generate_rotation_matrix_Z(m) {
 }
 
 function matrix_inverse(m){
-var l,u,z,inv_a = [];
+var l,u,z,inv_a,m_orig = [];
 var len = m[0].length;
 u = matrix_copy(m);
+m_orig = matrix_copy(m);
 l = generate_identity(len);
 I = generate_identity(len);
 z = generate_identity(len);
@@ -226,9 +237,9 @@ for(var k=1; k < i; k++){
 
 }}
 
-//console.log(l,u);
-
-
+//console.log(l);
+for(var k=1; k<len; k++){for(var n=0; n<k ;n++){u[k][n]=0;}}
+//console.log(u);
 //now finding inverse u(inv a) =z and l*z = I
     z[0][0] = I[0][0]/l[0][0];
 for(var i=1; i < len; i++){
@@ -256,8 +267,7 @@ for(var i=len-2; i >= 0; i--){
   inv_a[i][k] = [z[i][k] - a]/u[i][i];
 
 }}
-b=matrix_multiply(m,inv_a);
-console.log(b,inv_a);
+//b=matrix_multiply(m_orig,inv_a);
 
 return inv_a;
 }

@@ -64,19 +64,23 @@ kineval.initRobotJoints = function initRobotJoints() {
     }
 
     for (y in robot.links){
-        robot.links[y].children = [];}
+        robot.links[y].children = [];
+        }
         
     for (y in robot.links){
         for (x in robot.joints){
             if(robot.joints[x].child == y)
                 robot.links[y].parent = x;
             if(robot.joints[x].parent == y)
-                robot.links[y].children[robot.links[y].children.length] = x;
-                
-
+                //robot.links[y].children = [];
+                robot.links[y].children[robot.links[y].children.length] = x;       
         }
     }
-
+    for (y in robot.links){
+        if(robot.links[y].children.length == 0)  delete robot.links[y].children;
+        }
+    
+    
 
 }
 

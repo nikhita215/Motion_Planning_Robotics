@@ -47,7 +47,7 @@ kineval.buildFKTransforms = function buildFKTransforms() {
    
     mat = matrix_multiply(generate_rotation_matrix_Y(robot.origin.rpy[1]),generate_rotation_matrix_X(robot.origin.rpy[0]));
     mat = matrix_multiply(generate_rotation_matrix_Z(robot.origin.rpy[2]),mat);
-    mat = matrix_multiply(generate_translation_matrix(robot.origin.xyz),mat); 
+    mat = matrix_multiply(generate_translation_matrix(robot.origin.xyz[0],robot.origin.xyz[1],robot.origin.xyz[2]),mat); 
    
      if(robot.links_geom_imported)
 {
@@ -93,11 +93,11 @@ function traverseFKLink(b){
 
     mat = matrix_multiply(generate_rotation_matrix_Y(robot.joints[b].origin.rpy[1]),generate_rotation_matrix_X(robot.joints[b].origin.rpy[0]));
     mat = matrix_multiply(generate_rotation_matrix_Z(robot.joints[b].origin.rpy[2]),mat);
-    mat = matrix_multiply(generate_translation_matrix(robot.joints[b].origin.xyz),mat); 
+    mat = matrix_multiply(generate_translation_matrix(robot.joints[b].origin.xyz[0],robot.joints[b].origin.xyz[1],robot.joints[b].origin.xyz[2]),mat); 
      
 
     if(robot.joints[b].type == "prismatic"){
-        trans = generate_translation_matrix(robot.joints[b].axis);
+        trans = generate_translation_matrix(robot.joints[b].axis[0],robot.joints[b].axis[1],robot.joints[b].axis[2]);
         for (var i = 0; i < 3; i++) {
            trans[i][3] *= robot.joints[b].angle; 
         }
@@ -120,9 +120,8 @@ function traverseFKJoint(a){
     var b,c;
 
     robot.links[a].xform = matrix_stack[matrix_stack.length - 1];
-     if(robot.links[a].children.length == 0 ){
+     if(typeof robot.links[a].children == 'undefined' ){   
         matrix_stack.pop();
-      // c = gotoparent(a);
         b = robot.links[a].parent;
         c = robot.joints[b].parent;
         
