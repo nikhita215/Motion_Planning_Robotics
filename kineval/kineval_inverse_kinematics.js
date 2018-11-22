@@ -115,7 +115,7 @@ else if(robot.joints[endeffector_joint].xform[0][2] == 1){
 }
 else{
     endeffector_world.orientation[1] = -Math.PI/2;;
-    endeffector_world.orientation[0] = Math.atan2(robot.joints[endeffector_joint].xform[1][0],robot.joints[endeffector_joint].xform[1][1]); 
+    endeffector_world.orientation[0] = -Math.atan2(robot.joints[endeffector_joint].xform[1][0],robot.joints[endeffector_joint].xform[1][1]); 
     endeffector_world.orientation[2] = 0;
 }
 for (var i = 0; i < 3; i++) { endpoint_error[i+3][0] = (endeffector_target_world.orientation[i]-endeffector_world.orientation[i])/2; } 
