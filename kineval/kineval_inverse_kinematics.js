@@ -86,7 +86,7 @@ kineval.iterateIK = function iterate_inverse_kinematics(endeffector_target_world
     for (var i = 3; i < 6; i++) { endpoint_error[i][0] = 0 ; } 
 
 if (kineval.params.ik_orientation_included) {
-   
+/*   
     endeffector_world.orientation[1] = Math.asin(-robot.joints[endeffector_joint].xform[2][0]);
     if(robot.joints[endeffector_joint].xform[2][0] == 1){
     endeffector_world.orientation[0] = 0;
@@ -100,8 +100,8 @@ if (kineval.params.ik_orientation_included) {
     endeffector_world.orientation[0] = Math.atan2(robot.joints[endeffector_joint].xform[2][1],robot.joints[endeffector_joint].xform[2][2]);
     endeffector_world.orientation[2] = Math.atan2(robot.joints[endeffector_joint].xform[1][0],robot.joints[endeffector_joint].xform[0][0]);
     }
+*/    
     
- /*   
 if (robot.joints[endeffector_joint].xform[0][2] < 1 || robot.joints[endeffector_joint].xform[0][2] > -1) {
     endeffector_world.orientation[1] = Math.asin(robot.joints[endeffector_joint].xform[0][2]); 
     endeffector_world.orientation[0] = Math.atan2(-robot.joints[endeffector_joint].xform[1][2],robot.joints[endeffector_joint].xform[2][2]); 
@@ -110,19 +110,17 @@ if (robot.joints[endeffector_joint].xform[0][2] < 1 || robot.joints[endeffector_
 
 else if(robot.joints[endeffector_joint].xform[0][2] == 1){
     endeffector_world.orientation[1] = Math.PI/2;;
-    endeffector_world.orientation[2] = Math.atan2(robot.joints[endeffector_joint].xform[1][0],robot.joints[endeffector_joint].xform[1][1]); 
-    endeffector_world.orientation[0] = 0;
+    endeffector_world.orientation[0] = Math.atan2(robot.joints[endeffector_joint].xform[1][0],robot.joints[endeffector_joint].xform[1][1]); 
+    endeffector_world.orientation[2] = 0;
 }
 else{
     endeffector_world.orientation[1] = -Math.PI/2;;
-    endeffector_world.orientation[2] = Math.atan2(robot.joints[endeffector_joint].xform[1][0],robot.joints[endeffector_joint].xform[1][1]); 
-    endeffector_world.orientation[0] = 0;
-}*/
-for (var i = 0; i < 3; i++) { endpoint_error[i+3][0] = (endeffector_target_world.orientation[i]-endeffector_world.orientation[i])/30; } 
+    endeffector_world.orientation[0] = Math.atan2(robot.joints[endeffector_joint].xform[1][0],robot.joints[endeffector_joint].xform[1][1]); 
+    endeffector_world.orientation[2] = 0;
+}
+for (var i = 0; i < 3; i++) { endpoint_error[i+3][0] = (endeffector_target_world.orientation[i]-endeffector_world.orientation[i])/2; } 
 
 }  
-console.log(endeffector_world.orientation);
-console.log(endeffector_target_world.orientation);
 for (var j = n; j >= 0; j--) {
 
 
@@ -171,13 +169,7 @@ for (var j = n; j >= 0; j--) {
     }   
 
     a = robot.links[link].parent;
-}/*
-kineval.params.trial_ik_random.distance_current = Math.sqrt(
-             Math.pow(endeffector_target_world.position[0]-endeffector_world.position[0],2.0)
-           + Math.pow(endeffector_target_world.position[1]-endeffector_world.position[1],2.0)
-           + Math.pow(endeffector_target_world.position[2]-endeffector_world.position[2],2.0) );
-//if (kineval.params.trial_ik_random.distance_current<0.01) for (var i = 0; i < 3; i++) { endpoint_error[i+3][0] *= 50 ; }
-console.log(kineval.params.trial_ik_random.distance_current); */
+} 
 a=endeffector_joint;  
 
 if(kineval.params.ik_pseudoinverse){
@@ -188,8 +180,8 @@ r = matrix_multiply(matrix_inverse(r), matrix_transpose(jacobian));
 }  
 else{
 r = matrix_multiply(jacobian,matrix_transpose(jacobian));
-//r = matrix_multiply(matrix_transpose(jacobian),matrix_inverse(r));
-r = matrix_multiply(matrix_transpose(jacobian),numeric.inv(r));
+r = matrix_multiply(matrix_transpose(jacobian),matrix_inverse(r));
+//r = matrix_multiply(matrix_transpose(jacobian),numeric.inv(r));
 }
 q = matrix_multiply(r, endpoint_error);
 }
