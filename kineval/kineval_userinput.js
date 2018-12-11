@@ -117,6 +117,8 @@ kineval.handleUserInput = function user_input() {
     if (kineval.params.generating_motion_plan) 
         textbar.innerHTML = "motion planner has been invoked in the background";
 
+    if (kineval.params.RRT_star && kineval.params.generating_motion_plan) 
+        textbar.innerHTML = "motion planner has been invoked in the background-RRT_star";
 
 
     // incrment/decrement angle of active joint 

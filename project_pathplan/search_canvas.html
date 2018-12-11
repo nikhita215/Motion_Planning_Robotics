@@ -645,6 +645,13 @@ function iterateRRT() {
     //   insertTreeVertex - adds and displays new configuration vertex for a tree
     //   insertTreeEdge - adds and displays new tree edge between configurations
     //   drawHighlightedPath - renders a highlighted path in a tree
+
+    q_rand = randomConfig();
+    var s = extendRRT(T_a,q_rand);
+    if (s == "reached") {search_iterate = false;
+        drawHighlightedPath(dfsPath(T_a));}
+    return s;
+    
 }
 function iterateRRTConnect() {
     // STENCIL: implement a single iteration of an RRT-Connect algorithm.
@@ -662,8 +669,30 @@ function iterateRRTConnect() {
     //   insertTreeVertex - adds and displays new configuration vertex for a tree
     //   insertTreeEdge - adds and displays new tree edge between configurations
     //   drawHighlightedPath - renders a highlighted path in a tree
+
+     q_rand = randomConfig();
+     var s = extendRRT(T_a,q_rand);
+     var b;
+     if(s != "trapped")
+        b = connectRRT(T_b,q_new);
+        if (b == "reached"){ 
+          search_iterate = false;  
+         drawHighlightedPath(Path(T_a,T_b));
+         return b;
+        }
+     else [T_a,T_b]=[T_b,T_a];
+     
+     return s;
 }
+
+
 function iterateRRTStar() {
+    q_rand = randomConfig();
+    var s = extendRRT(T_a,q_rand);
+    if (s == "reached") {search_iterate = false;
+    drawHighlightedPath(dfsPath(T_a));}
+    return s;
+
 }
 //////////////////////////////////////////////////
 /////     STENCIL SUPPORT FUNCTIONS
@@ -776,9 +805,7 @@ function initSearchGraph() {
            
            G[i_o][j_o].queued= true;
            G[i_f][j_f].hscore= 0;
-          //G[i_f][j_f].hscore= 0;
- 
-//console.log(visit_queue.length);
+ v = 0;        
 }
 function setPlanningScene() {
     // obstacles specified as a range along [0] (x-dimension) and [1] y-dimension
@@ -846,6 +873,8 @@ function initRRT(q) {
     tree.vertices[0] = {};
     tree.vertices[0].vertex = q;
     tree.vertices[0].edges = [];
+    tree.vertices[0].parent = 0;
+    tree.vertices[0].cost = 0;
     // maintain index of newest vertex added to tree
     tree.newest = 0;
     return tree;
@@ -895,11 +924,191 @@ function insertTreeEdge(tree,q1_idx,q2_idx) {
 //////////////////////////////////////////////////
     // STENCIL: implement RRT-Connect functions here, such as:
     //   extendRRT
+function extendRRT(tree,q_rand){
+    var dis;
+    var dis1;
+    var newv = true;
+    q_near_index = findNearestNeighbor(q_rand,tree);
+    q_near = tree.vertices[q_near_index].vertex;
+    q_new = newConfig(q_near,q_rand);
+    for (var i = 0; i < tree.vertices.length; i++) {
+        dis1 =  Math.sqrt(Math.pow(q_new[0] - tree.vertices[i].vertex[0], 2) + Math.pow(q_new[1] - tree.vertices[i].vertex[1], 2));
+        if(dis1<eps*0.9) 
+            newv = false;
+    }
+
+    if (search_alg == "RRT-star") {
+        if (!testCollision(q_new) && newv) {
+        insertTreeVertex(tree,q_new);
+        parent(tree,q_near_index,q_new);
+        rewire(tree);
+        insertTreeEdge(tree,tree.vertices[tree.newest].parent,tree.newest);
+        dis =  Math.sqrt(Math.pow(q_new[0] - q_goal[0], 2) + Math.pow(q_new[1] - q_goal[1], 2));
+        if (dis<eps*0.98) 
+            return "reached";
+        else return "advanced";
+        }
+    }
+    else
+        if (!testCollision(q_new) && newv) {
+        insertTreeVertex(tree,q_new);
+        tree.vertices[tree.newest].parent=q_near_index;
+        insertTreeEdge(tree,q_near_index,tree.newest);
+        if (search_alg == "RRT-connect") dis =  Math.sqrt(Math.pow(q_new[0] - q_rand[0], 2) + Math.pow(q_new[1] - q_rand[1], 2));
+        else   dis =  Math.sqrt(Math.pow(q_new[0] - q_goal[0], 2) + Math.pow(q_new[1] - q_goal[1], 2));
+        if (dis<eps ) 
+            return "reached";
+        else return "advanced";
+        }
+
+return "trapped";
+}
+
+function parent(tree,q_near_index,q_new){
+    var cmin = Math.sqrt(Math.pow(q_new[0] - tree.vertices[q_near_index].vertex[0], 2) + Math.pow(q_new[1] - tree.vertices[q_near_index].vertex[1], 2)) + tree.vertices[q_near_index].cost;
+    var index = q_near_index;
+    var cost;
+    var valid = false;
+    var l = 20*Math.pow(Math.log(tree.vertices.length)/tree.vertices.length,0.5)*eps;
+    for (var i = 0; i < tree.newest; i++) {
+        dis =  Math.sqrt(Math.pow(q_new[0] - tree.vertices[i].vertex[0], 2) + Math.pow(q_new[1] - tree.vertices[i].vertex[1], 2));
+        cost = tree.vertices[i].cost + dis;
+        if (cost<cmin && dis< l) {
+        qpath = newConfig(tree.vertices[i].vertex,tree.vertices[tree.newest].vertex);
+        qpdis = Math.sqrt(Math.pow(tree.vertices[tree.newest].vertex[0] - qpath[0], 2) + Math.pow(tree.vertices[tree.newest].vertex[1] - qpath[1], 2));
+        while(!valid && qpdis>eps*0.5){
+            valid = testCollision(qpath);
+            qpath = newConfig(qpath,tree.vertices[tree.newest].vertex);
+            qpdis = Math.sqrt(Math.pow(tree.vertices[tree.newest].vertex[0] - qpath[0], 2) + Math.pow(tree.vertices[tree.newest].vertex[1] - qpath[1], 2));
+            }
+
+        if(!valid) {
+            cmin = cost;
+            index = i;
+        }
+        }
+        
+    }
+tree.vertices[tree.newest].parent = index;
+tree.vertices[tree.newest].cost = cmin;
+
+}
+function rewire(tree){
+
+var cost;
+var qpath;
+var valid = false;
+var dis =0;
+var l = 20*Math.pow(Math.log(tree.vertices.length)/tree.vertices.length,0.5)*eps;
+//console.log(l);
+    
+    for (var i = 1; i < tree.newest; i++) {
+
+        dis =  Math.sqrt(Math.pow(tree.vertices[tree.newest].vertex[0] - tree.vertices[i].vertex[0], 2) + Math.pow(tree.vertices[tree.newest].vertex[1] - tree.vertices[i].vertex[1], 2));
+        cost = tree.vertices[tree.newest].cost + dis;
+        qpath = newConfig(tree.vertices[i].vertex,tree.vertices[tree.newest].vertex);
+        qpdis = Math.sqrt(Math.pow(tree.vertices[tree.newest].vertex[0] - qpath[0], 2) + Math.pow(tree.vertices[tree.newest].vertex[1] - qpath[1], 2));
+
+        if(cost<tree.vertices[i].cost && dis<l && i != tree.vertices[tree.newest].parent) {
+            while(!valid && qpdis>eps*0.5){
+            valid = testCollision(qpath);
+            qpath = newConfig(qpath,tree.vertices[tree.newest].vertex);
+            qpdis = Math.sqrt(Math.pow(tree.vertices[tree.newest].vertex[0] - qpath[0], 2) + Math.pow(tree.vertices[tree.newest].vertex[1] - qpath[1], 2));
+            }
+                if(!valid){
+                tree.vertices[i].edges.shift();
+                tree.vertices[i].cost = cost;
+                tree.vertices[i].parent = tree.newest;
+               // tree.vertices[i].edges[0] = tree.newest;
+                insertTreeEdge(tree,i,tree.newest);
+               // tree.vertices[tree.newest].edges.push(i);
+                }
+        }
+    }
+
+}
+
     //   connectRRT
+function connectRRT(tree,q){
+
+    var s=extendRRT(tree,q);;
+    while(s == "advanced") s = extendRRT(tree,q);
+    return s;
+}
     //   randomConfig
+function randomConfig(){
+    q =[];
+    q[0]= -1.8 + Math.random() * 6.8;
+    q[1]= -1 + Math.random() * 6.8;
+return q;
+}
     //   newConfig
+function newConfig(q1,q2){
+
+    var q=[];
+    var dis =  Math.sqrt(Math.pow(q1[0] - q2[0], 2) + Math.pow(q1[1] - q2[1], 2));
+    q[0] = q1[0]+(q2[0]-q1[0])*eps/dis;
+    q[1] = q1[1]+(q2[1]-q1[1])*eps/dis;
+
+return q;
+}
     //   findNearestNeighbor
+function findNearestNeighbor(q,tree){
+    var q_index = 0;
+    dis_min = Math.sqrt(Math.pow(q[0] - tree.vertices[0].vertex[0], 2) + Math.pow(q[1]- tree.vertices[0].vertex[1], 2));
+    for(i=0;i<tree.vertices.length;i++){
+        dis = Math.sqrt(Math.pow(q[0] - tree.vertices[i].vertex[0], 2) + Math.pow(q[1]- tree.vertices[i].vertex[1], 2));
+        if (dis_min>dis) {
+            q_index=i;
+            dis_min = dis;}  
+    }
+return q_index;
+}
     //   dfsPath
+function dfsPath(tree) {
+    var i=1;
+    var path = [];
+    //path[0] = {};
+    //path[0].vertex = [];
+    path[0] = tree.vertices[tree.newest];
+    var ind = tree.newest;
+    while(1){
+        path[i] = tree.vertices[tree.vertices[ind].parent];
+        ind = tree.vertices[tree.vertices[ind].parent].parent;
+        if(ind == 0) break;
+        i++;
+    }
+    path[path.length] = tree.vertices[0];
+    return path;
+}
+
+function Path(ta,tb) {
+    var i=1;
+    var path = [];
+    var path_main = [];
+    path[0] = tb.vertices[tb.newest];
+    var ind = tb.newest;
+    while(1){
+        path[i] = tb.vertices[tb.vertices[ind].parent];
+        ind = tb.vertices[tb.vertices[ind].parent].parent;
+        if(ind == 0) break;
+        i++;
+    }
+    for (var i = 0; i < path.length; i++) {
+        path_main[i] = path[path.length-i-1];
+    }
+    ind2 = findNearestNeighbor(tb.vertices[tb.newest].vertex, ta);
+    path_main[path_main.length] = ta.vertices[ind2]; 
+    i = path_main.length;
+    while(1){
+        path_main[i] = ta.vertices[ta.vertices[ind2].parent];
+        ind2 = ta.vertices[ta.vertices[ind2].parent].parent;
+        if(ind2 == 0) break;
+        i++;
+    }
+    return path_main;
+}
+
 </script>
 
 

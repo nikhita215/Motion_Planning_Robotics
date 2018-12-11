@@ -339,6 +339,8 @@ kineval.initParameters = function initParameters() {
     kineval.params.update_motion_plan_traversal = false; // sets automatic traversal of previously generated motion plan
     kineval.params.persist_motion_plan_traversal = false; // sets automatic traversal of previously generated motion plan
     kineval.params.planner_state = "not invoked";
+    kineval.params.RRT_star = false;
+    kineval.params.Random_goal = false;
 
     // toggle display of robot links, joints, and axes 
     kineval.params.display_links = true; 
@@ -564,6 +566,8 @@ kineval.initGUIDisplay = function initGUIDisplay () {
     gui_plan.add(dummy_planning_object, 'start_planner');
     gui_plan.add(kineval.params, 'planner_state').listen();
     gui_plan.add(kineval.params, 'persist_motion_plan_traversal');
+    gui_plan.add(kineval.params, 'RRT_star');
+    gui_plan.add(kineval.params, 'Random_goal');
 
     gui_display = gui.addFolder('Display');
 
