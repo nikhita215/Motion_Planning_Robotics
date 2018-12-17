@@ -193,6 +193,7 @@ function generate_rotation_matrix_Z(m) {
 }
 
 function matrix_inverse(m){
+
 var l,u,z,inv_a,m_orig = [];
 var len = m[0].length;
 u = matrix_copy(m);
@@ -236,9 +237,10 @@ for(var k=1; k < i; k++){
   l[i][k] = [m[i][k] - a]/u[k][k];
 
 }}
-
+//console.log("L = ");
 //console.log(l);
 for(var k=1; k<len; k++){for(var n=0; n<k ;n++){u[k][n]=0;}}
+ //   console.log("U = ");
 //console.log(u);
 //now finding inverse u(inv a) =z and l*z = I
     z[0][0] = I[0][0]/l[0][0];
@@ -268,7 +270,8 @@ for(var i=len-2; i >= 0; i--){
 
 }}
 //b=matrix_multiply(m_orig,inv_a);
-
+//console.log("inverse = ")
+//console.log(inv_a);
 return inv_a;
 }
 
@@ -320,6 +323,10 @@ for(var k=1; k < i; k++){
   l[i][k] = [m[i][k] - a]/u[k][k];
 
 }}
+console.log("L = ");
+ console.log(l);
+console.log("U = ");
+ console.log(u);
 //now finding inverse u(x) =z and l*z = b
     z[0][0] = b[0]/l[0][0];
 
@@ -344,7 +351,7 @@ for(var i=len-2; i >= 0; i--){
   
   x[i][0] = [z[i][0] - a]/u[i][i];
 }
-
+console.log("solution of Ax = B");
 console.log(x);
 
 return x;

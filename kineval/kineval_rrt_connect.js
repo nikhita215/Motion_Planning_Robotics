@@ -171,7 +171,7 @@ function robot_rrt_planner_iterate() {
 
      //rrt-star
     if (kineval.params.RRT_star) {
-        if (rrt_iter_count%10 == 0) for (var j = 0; j<q_goal_config.length; j++)  q_rand[j] = q_goal_config[j];
+        if (rrt_iter_count%10 == 0) for (var j = 0; j<q_goal_config.length; j++)  q_rand[j] = q_goal_config[j];  //10% goal bias
 
         else q_rand = random_config(robot.joints);
         for (var j = 0; j < 3; j++)  disg +=  Math.pow(Ta.vertices[Ta.newest].vertex[j] - q_goal_config[j], 2);
@@ -378,9 +378,7 @@ function rewire(tree){
 
 var cost;
 var dis =0;
-//var l = 10*Math.log(tree.vertices.length)/tree.vertices.length;
 var l = 5*Math.pow(Math.log(tree.vertices.length)/tree.vertices.length,1/q_new.length)*eps;
-    console.log(l);
 
     for (var i = 1; i < tree.newest; i++) {
 

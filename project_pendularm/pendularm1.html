@@ -75,6 +75,7 @@ function init() {
     servo_active_state = {}; // string with current state of servo activation
     current_achieved = false;
     random = false;
+    targets = 0;
     //STENCIL: for verlet integration, a first step in time is needed
     
     pendulum.angle_previous = pendulum.angel;
@@ -128,7 +129,7 @@ function animate() {
 
     }
     if(random)
-     if(current_achieved){  pendulum.desired = Math.floor(Math.random() * 2*Math.PI) - Math.PI; current_achieved=false;}
+     if(current_achieved){  pendulum.desired = Math.floor(Math.random() * 2*Math.PI) - Math.PI; current_achieved=false; targets+=1;}
     // toggle activation of servo controller from user interaction
     if (keyboard.pressed("c"))
         servo_active_persist = !servo_active_persist;
@@ -243,7 +244,9 @@ function animate() {
         "<br>" +
         " s - disable servo "+
         "<br>" +
-        " r - generate random point "
+        " r - generate random point "+
+        "<br>" +
+        " targets reached = " + targets
     ;
     // threejs rendering update
     renderer.render( scene, camera );

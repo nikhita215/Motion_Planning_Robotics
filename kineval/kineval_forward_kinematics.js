@@ -25,10 +25,17 @@ kineval.robotForwardKinematics = function robotForwardKinematics () {
     }
 
  //m = [[11,9,24,2],[1,5,2,6],[3,17,18,1],[2,5,7,1]];
- //m = [[1,1,1],[0,0,1],[2,3,1]];
- //b= [[2],[2],[0]];
-    //mat = matrix_inverse(m);
-   // mat = linear_solve(m,b);
+ m = [[1,1,3],[-2,1,1],[1,-2,-5]];
+ //console.log("matrix = ");
+//console.log(m);
+ b= [[4],[-4],[-1]];
+ //console.log("B = ")
+//console.log(b);
+ //mat1 = linear_solve(m,b);
+  m = [[1,1,3],[-2,1,1],[1,-2,-5]];
+  //mat = matrix_inverse(m);
+ //console.log("inverse = ")
+//console.log(mat);
     // STENCIL: implement kineval.buildFKTransforms(); 
     kineval.buildFKTransforms();
    
