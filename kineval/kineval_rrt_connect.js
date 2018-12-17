@@ -118,7 +118,7 @@ kineval.robotRRTPlannerInit = function robot_rrt_planner_init() {
     var i; 
     q_goal_config = new Array(q_start_config.length);
     for (i=0;i<q_goal_config.length;i++) q_goal_config[i] = 0;
-
+    if (kineval.params.Random_goal) {q_goal_config = random_goal(robot.joints);}
     // flag to continue rrt iterations
     rrt_iterate = true;
     rrt_iter_count = 0;
@@ -127,15 +127,9 @@ kineval.robotRRTPlannerInit = function robot_rrt_planner_init() {
     cur_time = Date.now();
 
     Ta = tree_init(q_start_config); 
-    if (!kineval.params.RRT_star) Tb = tree_init(q_goal_config);
-   /* if (robot_obstacles.length != 0) {
-    var  rad = robot_obstacles[0].radius;
-    for (var i = 1; i < robot_obstacles.length; i++) {
-        if (robot_obstacles[i].radius<rad) rad = robot_obstacles[i].radius;
-    }
-    eps = rad*2;
-    }
-    else eps = 1;*/
+    //if (!kineval.params.RRT_star)
+     Tb = tree_init(q_goal_config);
+   
     eps = 1;
     kineval.motion_plan_traversal_index = 0;
      
@@ -220,6 +214,7 @@ function tree_init(q) {
 
     // create rendering geometry for base location of vertex configuration
     add_config_origin_indicator_geom(tree.vertices[0]);
+    tree.vertices[0].geom.material.color = {r:0,g:0,b:0};
 
     // maintain index of newest vertex added to tree
     tree.newest = 0;
@@ -441,6 +436,35 @@ var  q =[];
     }
 
 return q;
+}
+    // random_goal
+function random_goal(joints) {
+var  q =[];
+
+    for (var i = 0; i < 3; i++) {
+        q[i] = robot_boundary[0][i] + Math.random()*[robot_boundary[1][i] - robot_boundary[0][i]];
+    }
+    q[4] = 2*Math.PI*Math.random();
+    q[1] = 0;
+    q[3] = 0;
+    q[5] = 0;
+    for (x in joints) {
+        if (joints[x].type  == "revolute" || joints[x].type == "prismatic") 
+        q[q_names[x]]= joints[x].limit.lower + Math.random() * [joints[x].limit.upper - joints[x].limit.lower];
+            else if (joints[x].type == "continuous" || typeof joints[x].type === 'undefined') 
+            q[q_names[x]]= Math.random() * 2*Math.PI;
+            else q[q_names[x]] = 0;
+    }
+
+ while(1){
+    if (kineval.poseIsCollision(q) != false) {
+        q[0] = robot_boundary[0][0] + Math.random()*[robot_boundary[1][0] - robot_boundary[0][0]];
+        q[2] = robot_boundary[0][2] + Math.random()*[robot_boundary[1][2] - robot_boundary[0][2]];
+    }
+    else break;
+ }
+
+return q;    
 }
     //   new_config
 function new_config(q1,q2){
